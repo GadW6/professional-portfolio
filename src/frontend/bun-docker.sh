@@ -7,7 +7,7 @@
 claude mcp add -t http -s user svelte https://mcp.svelte.dev/mcp
 
   # -v ./src/frontend:/app \
-  
+
 docker run --rm -it \
   --name bun \
   -v .:/app \
@@ -16,3 +16,4 @@ docker run --rm -it \
   -p 5000:5000 \
   oven/bun:latest \
   -- run dev
+
