@@ -1,0 +1,86 @@
+{
+  "name": "Portfolio Repo DinD",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:UTC}",
+      "CLAUDE_CODE_VERSION": "latest",
+      "GEMINI_CODE_VERSION": "latest",
+      "GIT_DELTA_VERSION": "0.18.2"
+    }
+  },
+  "runArgs": ["--privileged"],
+  "mounts": [
+    // Docker storage (isolated from host)
+    "source=ubuntu-dind-storage-${devcontainerId},target=/var/lib/docker,type=volume",
+    // Persist command history
+    "source=ubuntu-dind-command-history-${devcontainerId},target=/commandhistory,type=volume",
+    // Claude Code configuration
+    "source=claude-code-config-ubuntu-${devcontainerId},target=/home/ubuntu/.claude,type=volume",
+    // Bash history
+    "source=claude-code-bashhistory-ubuntu-${devcontainerId},target=/home/ubuntu/.bash_history,type=volume",
+    // Ollama models (so you don't re-download models)
+    "source=ollama-models-${devcontainerId},target=/home/ubuntu/.ollama,type=volume"
+  ],
+  "remoteUser": "ubuntu",
+
+  // Start Docker daemon and Ollama service
+  "postStartCommand": "sudo /usr/local/bin/docker-entrypoint.sh && sleep 3 && docker info",
+
+  // Mount workspace
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+
+  // Forward Ollama API port
+  "forwardPorts": [],
+  "portsAttributes": {
+    // "11434": {
+    //   "label": "Ollama API",
+    //   "onAutoForward": "notify"
+    // }
+  },
+
+  // Environment variables
+  "containerEnv": {
+    "DOCKER_HOST": "unix:///var/run/docker.sock",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/ubuntu/.claude",
+    // "OLLAMA_HOST": "0.0.0.0:11434",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "false"
+  },
+
+  // VSCode customizations
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens",
+        "google.gemini-cli-vscode-ide-companion"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "/bin/zsh",
+            "icon": "terminal"
+          }
+        },
+        "files.eol": "\n",
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  }
+}

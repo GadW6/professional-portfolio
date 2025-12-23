@@ -1,0 +1,20 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount source code with delegated consistency for better performance
+      - .:/app:delegated
+      # Use named volumes to preserve node_modules and build cache
+      - /app/node_modules
+      - /app/.svelte-kit
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:5000
+    container_name: svelte-frontend-dev
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
