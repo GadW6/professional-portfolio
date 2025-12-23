@@ -38,5 +38,14 @@ export default defineConfig({
 				}
 			}
 		]
+	},
+
+	server: {
+		port: 5000, // Set your desired port here
+		host: '0.0.0.0',
+	},
+	preview: {
+		port: 8080, // You can also set a different port for the preview server
+		host: '0.0.0.0',
 	}
 });

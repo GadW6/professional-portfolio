@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       # Mount source code with delegated consistency for better performance
       - .:/app:delegated
