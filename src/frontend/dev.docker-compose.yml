@@ -1,0 +1,24 @@
+services:
+  bun:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile
+    image: localhost/oven/bun:base
+    container_name: bun
+    user: bun
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - '5000:5000'
+      - '8080:8080'
+      - '3000:3000'
+    command: bun run dev
+    networks:
+      - svelte-dev-network
+    stdin_open: true
+    tty: true
+
+networks:
+  svelte-dev-network:
+    name: svelte-dev-network
