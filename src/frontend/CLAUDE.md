@@ -118,24 +118,25 @@ bun run test:unit -- --run
 
 ## Svelte MCP Server
 
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+**CRITICAL**: ALWAYS use the Svelte MCP server when working with ANY Svelte or SvelteKit code to ensure accuracy and avoid hallucinations. This project uses Svelte 5 with runes, which requires up-to-date documentation.
 
-### 1. list-sections
+### Required Workflow for ALL Svelte/SvelteKit Tasks
 
-Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
-When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
+1. **`list-sections`** - MUST be called FIRST when any Svelte/SvelteKit topic comes up to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
 
-### 2. get-documentation
+2. **Analyze use_cases** - Review ALL returned sections and identify EVERY section relevant to the task by examining the use_cases field.
 
-Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
+3. **`get-documentation`** - Fetch ALL relevant sections at once (accepts array of sections). This provides comprehensive, official Svelte 5 documentation to ensure accurate implementation.
 
-### 3. svelte-autofixer
+4. **`svelte-autofixer`** - MANDATORY before sending any Svelte code to the user. Call repeatedly until NO issues or suggestions are returned. This ensures code follows Svelte 5 best practices.
 
-Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
+5. **`playground-link`** - Only after completing code and receiving user permission. NEVER use if code was written to project files.
 
-### 4. playground-link
+### Why This Matters
 
-Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+- Svelte 5 introduced breaking changes (runes: `$state()`, `$props()`, `$derived()`, `$effect()`)
+- Using outdated knowledge leads to code that doesn't work with Svelte 5
+- The MCP server provides official, current documentation
+- The autofixer catches common mistakes and suggests best practices
+
+**Summary**: For ANY Svelte work → list-sections → get-documentation → write code → svelte-autofixer (repeat until clean)
