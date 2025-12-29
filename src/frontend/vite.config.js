@@ -1,13 +1,18 @@
-import { defineConfig } from 'vitest/config';
-import { playwright } from '@vitest/browser-playwright';
+/// <reference types="vitest" />
+import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 
+	resolve: {
+		conditions: ['browser']
+	},
+
 	test: {
 		expect: { requireAssertions: true },
+		setupFiles: ['./vitest.setup.js'],
 
 		projects: [
 			{
@@ -15,12 +20,7 @@ export default defineConfig({
 
 				test: {
 					name: 'client',
-
-					browser: {
-						enabled: true,
-						provider: playwright(),
-						instances: [{ browser: 'chromium', headless: true }]
-					},
+					environment: 'happy-dom',
 
 					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
 					exclude: ['src/lib/server/**']
@@ -42,10 +42,10 @@ export default defineConfig({
 
 	server: {
 		port: 5000, // Set your desired port here
-		host: '0.0.0.0',
+		host: '0.0.0.0'
 	},
 	preview: {
 		port: 8080, // You can also set a different port for the preview server
-		host: '0.0.0.0',
+		host: '0.0.0.0'
 	}
 });

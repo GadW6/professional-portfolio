@@ -20,18 +20,17 @@ FROM oven/bun:latest
 
 WORKDIR /app
 
-# Copy package.json and lockfile
-COPY package.json bun.lockb ./
-
-# Install only production dependencies
-RUN bun install --frozen-lockfile --production
-
 # Copy built application from builder stage
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./
 
+# Set production environment
+ENV NODE_ENV=production
+ENV PORT=5000
+ENV HOST=0.0.0.0
+
 # Expose port 5000
 EXPOSE 5000
 
-# Run the preview server on all interfaces
-CMD ["bun", "run", "preview", "--host", "0.0.0.0", "--port", "5000"]
+# Run the production Node.js server built by adapter-node
+CMD ["node", "build/index.js"]

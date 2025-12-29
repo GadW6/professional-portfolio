@@ -42,6 +42,7 @@ test-results
 .netlify
 .wrangler
 /.svelte-kit
+.svelte-kit
 /build
 
 # OS
