@@ -82,6 +82,10 @@ This project uses Svelte 5 with runes syntax:
 - Prettier plugin automatically sorts Tailwind classes
 - Uses utility-first approach with custom gradient backgrounds
 
+### UI Design Guidelines
+
+**CRITICAL**: ALWAYS use Tailwind CSS for ALL UI design and styling work. Never use plain CSS, inline styles, or CSS-in-JS alternatives unless absolutely necessary for edge cases. Tailwind utility classes should be the default approach for all component styling.
+
 ## Testing Strategy
 
 ### Unit Tests (Vitest)
